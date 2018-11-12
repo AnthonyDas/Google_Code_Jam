@@ -14,18 +14,16 @@ int main() {
 	QualificationRoundAfrica2010C("large");
 	*/
 
-	QualificationRound2016A("small");
-	QualificationRound2016A("large");
-	QualificationRound2016B("small");
-	QualificationRound2016B("large");
+	//QualificationRound2016A("small");
+	//QualificationRound2016A("large");
+	//QualificationRound2016B("small");
+	//QualificationRound2016B("large");
 	QualificationRound2016C("small");
 	QualificationRound2016C("large");
+	//QualificationRound2016D("small"); 
+	//QualificationRound2016D("large");
 
-	// Missing question
-	// QualificationRound2016D("small"); 
-	// QualificationRound2016D("large");
-
-	int dummy;
-	std::cin >> dummy;
+	std::cout << "Finished - type something to quit" << std::endl;
+	int dummy; std::cin >> dummy;
 	return EXIT_SUCCESS;
 }

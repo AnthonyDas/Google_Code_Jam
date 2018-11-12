@@ -113,26 +113,22 @@ void QualificationRound2016B(const std::string &version) {
 	std::cout << (total_tests == test_count ? "Correct" : "INCORRECT") << " number of test cases processed" << std::endl;
 }
 
-int convert_base_to_decimal(const std::string &x, const int &base) {
-	int pow = 1, decimal = 0;
-	for (std::string::const_reverse_iterator crit = x.crbegin(); crit != x.crend(); ++crit) {
-		if (*crit) {
-			decimal += pow * (*crit);
-		}
-		pow *= base;
-	}
-	return decimal;
+template <typename T1, typename T2>
+T1 convert_binary_to_base(const T1 &bin, const T2 &base) {
+	if (bin == 0) { return 0; }
+
+	return (base * convert_binary_to_base(bin / 2, base)) + (bin % 2);
 }
 
-int find_factor(const int &decimal) {
-	const int lim = sqrt(decimal);
-	for (int i = 2; i <= lim; ++i) {
+template <typename T>
+T find_factor(const T &decimal) {
+	for (T i = 2; (i * i) <= decimal; ++i) {
 		if (decimal % i == 0) {
 			return i;
 		}
 	}
 
-	return -1; // decimal is prime
+	return 0; // decimal is prime
 }
 
 // Problem C. Coin Jam
@@ -155,11 +151,64 @@ void QualificationRound2016C(const std::string &version) {
 
 		std::cout << test_count << " " << N << " " << J << std::endl;
 
-		std::string trial(N, '0');
-		trial.front() = trial.back() = '1';
+		// For a string of length N comprising only of 0 or 1, with the first
+		// and last positions being 1, in base 2 will mean every odd number between
+		// and (2^(N-1) + 1) and (2^N - 1)
 
-		
+		const long long int lim = pow(2, N) - 1;
+		for (long long int trial = (1 << (N - 1)) + 1; J > 0; trial += 2) {
+
+			std::vector<long long int> factors;
+
+			// Check whether non prime in bases 2 to 10 inclusive
+			bool nonprime = true;
+			for (int base = 2; base <= 10; ++base) {
+				long long int decimal = convert_binary_to_base(trial, base);
+				long long int factor = find_factor(decimal);
+				if (!factor) {
+					break;
+				}
+				else {
+					factors.push_back(factor);
+				}
+			}
+
+			if (factors.size() < 9) {
+				continue;
+			}
+
+			--J; // Reduce remaining Coin Jams needed
+
+			// Print the non-trivial divisors
+			std::ostringstream ss;
+			ss << convert_binary_to_base(trial, 10);
+			for (auto cit = factors.cbegin(); cit != factors.cend(); ++cit) {
+				ss << " " << *cit;
+			}
+			ss << std::endl;
+			std::cout << ss.str();
+			outfile << ss.str();
+		}
 	}
 
 	std::cout << (total_tests == test_count ? "Correct" : "INCORRECT") << " number of test cases processed" << std::endl;
+}
+
+
+// Problem D. Fractiles
+void QualificationRound2016D(const std::string &version) {
+
+	std::string inpath("QualificationRound2016/D-" + version + "-practice.in");
+	std::ifstream infile(inpath);
+	if (!infile) { throw(std::runtime_error("Cannot open infile " + inpath)); }
+
+	std::string outpath("QualificationRound2016/D-" + version + "-practice.out");
+	std::ofstream outfile(outpath);
+	if (!outfile) { throw(std::runtime_error("Cannot open outfile " + outpath)); }
+
+	int total_tests;
+	infile >> total_tests;
+
+
+	//std::cout << (total_tests == test_count ? "Correct" : "INCORRECT") << " number of test cases processed" << std::endl;
 }
